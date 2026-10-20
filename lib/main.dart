@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'screens/camera_home_screen.dart';
 import 'services/snap_repository.dart';
@@ -5,7 +7,12 @@ import 'services/snap_repository.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   final repository = SnapRepository();
-  runApp(SnapApp(repository: repository));
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => SnapApp(repository: repository),
+    ),
+  );
 }
 
 class SnapApp extends StatelessWidget {
@@ -21,6 +28,8 @@ class SnapApp extends StatelessWidget {
     return MaterialApp(
       title: 'Snap & Gallery Note',
       debugShowCheckedModeBanner: false,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,

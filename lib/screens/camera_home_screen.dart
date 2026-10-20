@@ -6,6 +6,7 @@ import '../widgets/camera_viewfinder.dart';
 import '../widgets/gallery_strip.dart';
 import '../widgets/note_detail_dialog.dart';
 import '../widgets/send_to_security_dialog.dart';
+import '../widgets/student_id_dialog.dart';
 
 class CameraHomeScreen extends StatefulWidget {
   const CameraHomeScreen({
@@ -29,6 +30,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
   bool _isFlashSupported = false;
   FlashMode _flashMode = FlashMode.auto;
   DateTime? _lastCaptureTime;
+  String _activeStudentId = '';
   String? _errorMessage;
 
   @override
@@ -139,6 +141,14 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
     }
   }
 
+  Future<String?> _promptStudentId([String initial = '']) {
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StudentIdInputDialog(initialId: initial),
+    );
+  }
+
   Future<void> _capturePhoto() async {
     final controller = _cameraController;
     final now = DateTime.now();
@@ -153,6 +163,19 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
     if (_lastCaptureTime != null &&
         now.difference(_lastCaptureTime!) < const Duration(milliseconds: 700)) {
       return;
+    }
+
+    String studentIdToUse = _activeStudentId.trim();
+    if (studentIdToUse.isEmpty) {
+      final enteredId = await _promptStudentId();
+      if (!mounted) return;
+      if (enteredId == null || enteredId.trim().isEmpty) {
+        return;
+      }
+      studentIdToUse = enteredId.trim();
+      setState(() {
+        _activeStudentId = studentIdToUse;
+      });
     }
 
     _lastCaptureTime = now;
@@ -172,6 +195,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
         builder: (dialogContext) => SendToSecurityDialog(
           imageBytes: bytes,
           filePath: file.path,
+          studentId: studentIdToUse,
         ),
       );
 
@@ -189,7 +213,9 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       await widget.repository.addNote(newNote);
       if (!mounted) return;
 
-      setState(() {});
+      setState(() {
+        _activeStudentId = '';
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -301,6 +327,15 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
                 isCapturing: _isCapturing,
                 isFlashSupported: _isFlashSupported,
                 canSwitchCamera: _availableCameras.length > 1,
+                activeStudentId: _activeStudentId,
+                onTapStudentId: () async {
+                  final newId = await _promptStudentId(_activeStudentId);
+                  if (newId != null && mounted) {
+                    setState(() {
+                      _activeStudentId = newId.trim();
+                    });
+                  }
+                },
                 onCapture: _capturePhoto,
                 onSwitchCamera: _switchCamera,
                 onToggleFlash: _toggleFlash,

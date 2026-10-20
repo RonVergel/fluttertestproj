@@ -7,10 +7,12 @@ class SendToSecurityDialog extends StatefulWidget {
     super.key,
     required this.imageBytes,
     required this.filePath,
+    this.studentId = '',
   });
 
   final Uint8List? imageBytes;
   final String filePath;
+  final String studentId;
 
   static const Color umRed = Color(0xFF902E2B);
   static const Color umYellow = Color(0xFFECB843);
@@ -25,7 +27,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
   @override
   void initState() {
     super.initState();
-    _idController = TextEditingController();
+    _idController = TextEditingController(text: widget.studentId);
   }
 
   @override
@@ -68,7 +70,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
             ),
             const SizedBox(height: 4),
             const Text(
-              'Violation Review',
+              'Dress Code Violation Review',
               style: TextStyle(
                 color: SendToSecurityDialog.umYellow,
                 fontSize: 12,
@@ -92,7 +94,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
             const SizedBox(height: 16),
             TextField(
               controller: _idController,
-              autofocus: true,
+              autofocus: widget.studentId.isEmpty,
               keyboardType: TextInputType.text,
               style: const TextStyle(
                 color: Colors.white,
@@ -105,7 +107,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
                   color: SendToSecurityDialog.umYellow,
                   fontWeight: FontWeight.w500,
                 ),
-                hintText: 'Type ID number',
+                hintText: 'Type ID number (e.g. 2024-12345)',
                 hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
                 prefixIcon: const Icon(
                   Icons.badge_outlined,

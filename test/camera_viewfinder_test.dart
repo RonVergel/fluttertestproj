@@ -53,6 +53,34 @@ void main() {
       expect(find.byType(FlashModeButton), findsOneWidget);
       expect(find.byIcon(Icons.flip_camera_ios), findsOneWidget);
     });
+
+    testWidgets('renders active student ID badge and responds to taps',
+        (WidgetTester tester) async {
+      bool tapped = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CameraViewfinder(
+              controller: null,
+              isInitialized: true,
+              isCapturing: false,
+              isFlashSupported: false,
+              canSwitchCamera: false,
+              activeStudentId: '2024-00123',
+              onTapStudentId: () => tapped = true,
+              onCapture: () {},
+              onSwitchCamera: () {},
+              onToggleFlash: () {},
+              currentFlashMode: FlashMode.off,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('ID: 2024-00123'), findsOneWidget);
+      await tester.tap(find.text('ID: 2024-00123'));
+      expect(tapped, isTrue);
+    });
   });
 }
-

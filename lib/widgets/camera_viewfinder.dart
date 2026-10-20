@@ -14,6 +14,8 @@ class CameraViewfinder extends StatelessWidget {
     this.isFlashSupported = false,
     this.canSwitchCamera = false,
     this.onRefresh,
+    this.activeStudentId = '',
+    this.onTapStudentId,
     this.errorMessage,
   });
 
@@ -24,6 +26,8 @@ class CameraViewfinder extends StatelessWidget {
   final VoidCallback onSwitchCamera;
   final VoidCallback onToggleFlash;
   final VoidCallback? onRefresh;
+  final String activeStudentId;
+  final VoidCallback? onTapStudentId;
   final FlashMode currentFlashMode;
   final bool isFlashSupported;
   final bool canSwitchCamera;
@@ -56,6 +60,15 @@ class CameraViewfinder extends StatelessWidget {
                 ),
               ),
             ),
+          Positioned(
+            top: 16,
+            left: onRefresh != null ? 68 : 16,
+            right: isFlashSupported ? 68 : 16,
+            child: ActiveStudentIdBadge(
+              studentId: activeStudentId,
+              onTap: onTapStudentId,
+            ),
+          ),
           if (isFlashSupported)
             Positioned(
               top: 16,
@@ -286,6 +299,69 @@ class ShutterButton extends StatelessWidget {
                   ),
                 )
               : null,
+        ),
+      ),
+    );
+  }
+}
+
+class ActiveStudentIdBadge extends StatelessWidget {
+  const ActiveStudentIdBadge({
+    super.key,
+    required this.studentId,
+    required this.onTap,
+  });
+
+  final String studentId;
+  final VoidCallback? onTap;
+
+  static const Color umRed = Color(0xFF902E2B);
+  static const Color umYellow = Color(0xFFECB843);
+
+  @override
+  Widget build(BuildContext context) {
+    final hasId = studentId.isNotEmpty;
+
+    return Center(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: hasId ? umRed.withValues(alpha: 0.85) : Colors.black54,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: umYellow,
+              width: 1.5,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                hasId ? Icons.badge_outlined : Icons.add_circle_outline,
+                color: umYellow,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  hasId ? 'ID: $studentId' : 'Tap to enter Student ID',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (hasId) ...[
+                const SizedBox(width: 6),
+                const Icon(Icons.edit, color: Colors.white70, size: 14),
+              ],
+            ],
+          ),
         ),
       ),
     );

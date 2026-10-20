@@ -5,7 +5,7 @@ import 'package:snap_note/widgets/gallery_strip.dart';
 
 void main() {
   group('GalleryStrip Widget', () {
-    testWidgets('displays empty state when notes list is empty',
+    testWidgets('renders nothing when notes list is empty',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -18,7 +18,8 @@ void main() {
         ),
       );
 
-      expect(find.text('No snapshots yet. Tap capture above!'), findsOneWidget);
+      expect(find.byType(GalleryItemCard), findsNothing);
+      expect(find.text('No snapshots yet. Tap capture above!'), findsNothing);
     });
 
     testWidgets('renders note cards when notes are provided',

@@ -285,11 +285,13 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
                 errorMessage: _errorMessage,
               ),
             ),
-            const Divider(height: 1, color: Colors.white12),
-            GalleryStrip(
-              notes: widget.repository.notes,
-              onSelectNote: _showNoteDetails,
-            ),
+            if (widget.repository.notes.isNotEmpty) ...[
+              const Divider(height: 1, color: Colors.white12),
+              GalleryStrip(
+                notes: widget.repository.notes,
+                onSelectNote: _showNoteDetails,
+              ),
+            ],
           ],
         ),
       ),

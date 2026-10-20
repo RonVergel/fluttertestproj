@@ -15,7 +15,7 @@ class GalleryStrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (notes.isEmpty) {
-      return const GalleryEmptyState();
+      return const SizedBox.shrink();
     }
 
     return SizedBox(

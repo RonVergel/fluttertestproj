@@ -37,9 +37,7 @@ class CameraViewfinder extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             if (isInitialized && controller != null)
-              Center(
-                child: CameraPreview(controller!),
-              )
+              FullBleedCameraPreview(controller: controller!)
             else
               CameraPlaceholderView(message: errorMessage),
             if (isFlashSupported)
@@ -66,6 +64,48 @@ class CameraViewfinder extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class FullBleedCameraPreview extends StatelessWidget {
+  const FullBleedCameraPreview({
+    super.key,
+    required this.controller,
+  });
+
+  final CameraController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = constraints.biggest;
+        final aspectRatio = controller.value.aspectRatio;
+
+        if (aspectRatio <= 0) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final double previewWidth = size.width;
+        final double previewHeight = size.width / aspectRatio;
+
+        final double scaleX = size.width / previewWidth;
+        final double scaleY = size.height / previewHeight;
+        final double scale = scaleX > scaleY ? scaleX : scaleY;
+
+        return ClipRect(
+          child: Transform.scale(
+            scale: scale,
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: aspectRatio,
+                child: CameraPreview(controller),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

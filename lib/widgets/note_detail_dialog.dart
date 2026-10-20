@@ -25,11 +25,14 @@ class NoteDetailDialog extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: AspectRatio(
-                aspectRatio: 4 / 3,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.5,
+                ),
                 child: SnapImageView(
                   filePath: note.filePath,
                   imageBytes: note.imageBytes,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

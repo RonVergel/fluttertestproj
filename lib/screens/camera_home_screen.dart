@@ -27,6 +27,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
   bool _isCapturing = false;
   bool _isFlashSupported = false;
   FlashMode _flashMode = FlashMode.auto;
+  DateTime? _lastCaptureTime;
   String? _errorMessage;
 
   @override
@@ -109,6 +110,9 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
         flashSupported = true;
       } catch (_) {
         flashSupported = false;
+        try {
+          await newController.setFlashMode(FlashMode.off);
+        } catch (_) {}
       }
 
       if (!mounted) {
@@ -120,6 +124,9 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
         _cameraController = newController;
         _isInitialized = true;
         _isFlashSupported = flashSupported;
+        if (!flashSupported) {
+          _flashMode = FlashMode.off;
+        }
         _errorMessage = null;
       });
     } catch (e) {
@@ -133,13 +140,23 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
 
   Future<void> _capturePhoto() async {
     final controller = _cameraController;
-    if (controller == null || !controller.value.isInitialized || _isCapturing) {
+    final now = DateTime.now();
+
+    if (controller == null ||
+        !controller.value.isInitialized ||
+        _isCapturing ||
+        controller.value.isTakingPicture) {
       return;
     }
 
-    setState(() {
-      _isCapturing = true;
-    });
+    if (_lastCaptureTime != null &&
+        now.difference(_lastCaptureTime!) < const Duration(milliseconds: 700)) {
+      return;
+    }
+
+    _lastCaptureTime = now;
+    _isCapturing = true;
+    setState(() {});
 
     try {
       final file = await controller.takePicture();
@@ -164,6 +181,11 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       );
     } catch (e) {
       if (!mounted) return;
+      if (e is CameraException &&
+          (e.code == 'Previous capture has not returned yet.' ||
+              e.description?.contains('takePicture was called before') == true)) {
+        return;
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Capture failed: $e'),

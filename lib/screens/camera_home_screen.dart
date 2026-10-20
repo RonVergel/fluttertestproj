@@ -162,19 +162,24 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       final file = await controller.takePicture();
       if (!mounted) return;
 
+      final bytes = await file.readAsBytes();
+      if (!mounted) return;
+
       final newNote = SnapNote(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         filePath: file.path,
+        imageBytes: bytes,
         timestamp: DateTime.now(),
       );
 
-      setState(() {
-        widget.repository.addNote(newNote);
-      });
+      await widget.repository.addNote(newNote);
+      if (!mounted) return;
+
+      setState(() {});
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Snap captured and saved!'),
+          content: Text('Snap captured and saved to database!'),
           duration: Duration(seconds: 1),
           behavior: SnackBarBehavior.floating,
         ),
@@ -247,10 +252,11 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       builder: (dialogContext) {
         return NoteDetailDialog(
           note: note,
-          onDelete: () {
-            setState(() {
-              widget.repository.deleteNote(note.id);
-            });
+          onDelete: () async {
+            await widget.repository.deleteNote(note.id);
+            if (mounted) {
+              setState(() {});
+            }
           },
         );
       },

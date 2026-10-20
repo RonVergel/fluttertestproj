@@ -6,15 +6,32 @@ class SnapImageView extends StatelessWidget {
   const SnapImageView({
     super.key,
     required this.filePath,
+    this.imageBytes,
     this.fit = BoxFit.cover,
   });
 
   final String filePath;
+  final Uint8List? imageBytes;
   final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
+    if (imageBytes != null && imageBytes!.isNotEmpty) {
+      return Image.memory(
+        imageBytes!,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => const Center(
+          child: Icon(Icons.broken_image, color: Colors.white38),
+        ),
+      );
+    }
+
     if (kIsWeb) {
+      if (filePath.isEmpty) {
+        return const Center(
+          child: Icon(Icons.broken_image, color: Colors.white38),
+        );
+      }
       return Image.network(
         filePath,
         fit: fit,
@@ -25,7 +42,7 @@ class SnapImageView extends StatelessWidget {
     }
 
     final file = File(filePath);
-    if (!file.existsSync()) {
+    if (filePath.isEmpty || !file.existsSync()) {
       return const Center(
         child: Icon(Icons.broken_image, color: Colors.white38),
       );
@@ -40,4 +57,3 @@ class SnapImageView extends StatelessWidget {
     );
   }
 }
-

@@ -87,7 +87,10 @@ class GalleryItemCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            SnapImageView(filePath: note.filePath),
+            SnapImageView(
+              filePath: note.filePath,
+              imageBytes: note.imageBytes,
+            ),
             Positioned(
               bottom: 0,
               left: 0,

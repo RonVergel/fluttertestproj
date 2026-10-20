@@ -27,7 +27,10 @@ class NoteDetailDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: AspectRatio(
                 aspectRatio: 4 / 3,
-                child: SnapImageView(filePath: note.filePath),
+                child: SnapImageView(
+                  filePath: note.filePath,
+                  imageBytes: note.imageBytes,
+                ),
               ),
             ),
             const SizedBox(height: 12),

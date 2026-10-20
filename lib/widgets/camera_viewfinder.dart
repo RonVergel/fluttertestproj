@@ -11,6 +11,8 @@ class CameraViewfinder extends StatelessWidget {
     required this.onSwitchCamera,
     required this.onToggleFlash,
     required this.currentFlashMode,
+    this.isFlashSupported = false,
+    this.canSwitchCamera = false,
     this.errorMessage,
   });
 
@@ -21,6 +23,8 @@ class CameraViewfinder extends StatelessWidget {
   final VoidCallback onSwitchCamera;
   final VoidCallback onToggleFlash;
   final FlashMode currentFlashMode;
+  final bool isFlashSupported;
+  final bool canSwitchCamera;
   final String? errorMessage;
 
   @override
@@ -38,14 +42,15 @@ class CameraViewfinder extends StatelessWidget {
               )
             else
               CameraPlaceholderView(message: errorMessage),
-            Positioned(
-              top: 16,
-              right: 16,
-              child: FlashModeButton(
-                flashMode: currentFlashMode,
-                onPressed: isInitialized ? onToggleFlash : null,
+            if (isFlashSupported)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: FlashModeButton(
+                  flashMode: currentFlashMode,
+                  onPressed: isInitialized ? onToggleFlash : null,
+                ),
               ),
-            ),
             Positioned(
               bottom: 20,
               left: 0,
@@ -53,6 +58,7 @@ class CameraViewfinder extends StatelessWidget {
               child: CameraControlsBar(
                 isCapturing: isCapturing,
                 isEnabled: isInitialized,
+                canSwitchCamera: canSwitchCamera,
                 onCapture: onCapture,
                 onSwitchCamera: onSwitchCamera,
               ),
@@ -138,37 +144,42 @@ class CameraControlsBar extends StatelessWidget {
     super.key,
     required this.isCapturing,
     required this.isEnabled,
+    required this.canSwitchCamera,
     required this.onCapture,
     required this.onSwitchCamera,
   });
 
   final bool isCapturing;
   final bool isEnabled;
+  final bool canSwitchCamera;
   final VoidCallback onCapture;
   final VoidCallback onSwitchCamera;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: canSwitchCamera
+          ? MainAxisAlignment.spaceEvenly
+          : MainAxisAlignment.center,
       children: [
-        const SizedBox(width: 48),
+        if (canSwitchCamera) const SizedBox(width: 48),
         ShutterButton(
           isCapturing: isCapturing,
           isEnabled: isEnabled,
           onPressed: onCapture,
         ),
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.black45,
-            shape: BoxShape.circle,
+        if (canSwitchCamera)
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.black45,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.flip_camera_ios, color: Colors.white, size: 22),
+              onPressed: isEnabled ? onSwitchCamera : null,
+              tooltip: 'Switch Lens',
+            ),
           ),
-          child: IconButton(
-            icon: const Icon(Icons.flip_camera_ios, color: Colors.white, size: 22),
-            onPressed: isEnabled ? onSwitchCamera : null,
-            tooltip: 'Switch Lens',
-          ),
-        ),
       ],
     );
   }
@@ -225,3 +236,4 @@ class ShutterButton extends StatelessWidget {
     );
   }
 }
+

@@ -25,6 +25,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
   int _selectedCameraIndex = 0;
   bool _isInitialized = false;
   bool _isCapturing = false;
+  bool _isFlashSupported = false;
   FlashMode _flashMode = FlashMode.auto;
   String? _errorMessage;
 
@@ -102,10 +103,12 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
 
     try {
       await newController.initialize();
+      bool flashSupported = false;
       try {
         await newController.setFlashMode(_flashMode);
+        flashSupported = true;
       } catch (_) {
-        // Flash/torch mode is not supported by standard webcams or desktop cameras.
+        flashSupported = false;
       }
 
       if (!mounted) {
@@ -116,6 +119,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       setState(() {
         _cameraController = newController;
         _isInitialized = true;
+        _isFlashSupported = flashSupported;
         _errorMessage = null;
       });
     } catch (e) {
@@ -257,6 +261,8 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
                   controller: _cameraController,
                   isInitialized: _isInitialized,
                   isCapturing: _isCapturing,
+                  isFlashSupported: _isFlashSupported,
+                  canSwitchCamera: _availableCameras.length > 1,
                   onCapture: _capturePhoto,
                   onSwitchCamera: _switchCamera,
                   onToggleFlash: _toggleFlash,

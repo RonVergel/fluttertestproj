@@ -23,3 +23,4 @@ class SnapRepository {
     _notes.clear();
   }
 }
+

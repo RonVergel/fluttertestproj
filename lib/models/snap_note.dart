@@ -34,3 +34,4 @@ class SnapNote {
   @override
   int get hashCode => Object.hash(id, filePath, timestamp, caption);
 }
+

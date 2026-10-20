@@ -5,6 +5,7 @@ import '../services/snap_repository.dart';
 import '../widgets/camera_viewfinder.dart';
 import '../widgets/gallery_strip.dart';
 import '../widgets/note_detail_dialog.dart';
+import '../widgets/send_to_security_dialog.dart';
 
 class CameraHomeScreen extends StatefulWidget {
   const CameraHomeScreen({
@@ -165,11 +166,24 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       final bytes = await file.readAsBytes();
       if (!mounted) return;
 
+      final remarks = await showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => SendToSecurityDialog(
+          imageBytes: bytes,
+          filePath: file.path,
+        ),
+      );
+
+      if (!mounted) return;
+      if (remarks == null) return;
+
       final newNote = SnapNote(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         filePath: file.path,
         imageBytes: bytes,
         timestamp: DateTime.now(),
+        caption: remarks,
       );
 
       await widget.repository.addNote(newNote);
@@ -179,8 +193,8 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Snap captured and saved to database!'),
-          duration: Duration(seconds: 1),
+          content: Text('Report sent to Security Office!'),
+          duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),
       );

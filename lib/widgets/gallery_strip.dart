@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/snap_note.dart';
+import 'snap_image_view.dart';
 
 class GalleryStrip extends StatelessWidget {
   const GalleryStrip({
@@ -73,9 +73,6 @@ class GalleryItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = File(note.filePath);
-    final fileExists = file.existsSync();
-
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -90,12 +87,7 @@ class GalleryItemCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            if (fileExists)
-              Image.file(file, fit: BoxFit.cover)
-            else
-              const Center(
-                child: Icon(Icons.image_not_supported, color: Colors.white38),
-              ),
+            SnapImageView(filePath: note.filePath),
             Positioned(
               bottom: 0,
               left: 0,
@@ -122,3 +114,4 @@ class GalleryItemCard extends StatelessWidget {
     );
   }
 }
+

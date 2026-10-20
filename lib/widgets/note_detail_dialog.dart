@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/snap_note.dart';
+import 'snap_image_view.dart';
 
 class NoteDetailDialog extends StatelessWidget {
   const NoteDetailDialog({
@@ -14,9 +14,6 @@ class NoteDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = File(note.filePath);
-    final fileExists = file.existsSync();
-
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -30,15 +27,7 @@ class NoteDetailDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: AspectRatio(
                 aspectRatio: 4 / 3,
-                child: fileExists
-                    ? Image.file(file, fit: BoxFit.cover)
-                    : const Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          size: 48,
-                          color: Colors.grey,
-                        ),
-                      ),
+                child: SnapImageView(filePath: note.filePath),
               ),
             ),
             const SizedBox(height: 12),
@@ -88,3 +77,4 @@ class NoteDetailDialog extends StatelessWidget {
     );
   }
 }
+

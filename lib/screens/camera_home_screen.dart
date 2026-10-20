@@ -102,7 +102,11 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
 
     try {
       await newController.initialize();
-      await newController.setFlashMode(_flashMode);
+      try {
+        await newController.setFlashMode(_flashMode);
+      } catch (_) {
+        // Flash/torch mode is not supported by standard webcams or desktop cameras.
+      }
 
       if (!mounted) {
         await newController.dispose();
@@ -199,7 +203,16 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
       setState(() {
         _flashMode = nextMode;
       });
-    } catch (_) {}
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Flash is not supported on this camera.'),
+          duration: Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   void _showNoteDetails(SnapNote note) {
@@ -263,3 +276,4 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
     );
   }
 }
+

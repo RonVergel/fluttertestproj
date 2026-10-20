@@ -13,6 +13,7 @@ class CameraViewfinder extends StatelessWidget {
     required this.currentFlashMode,
     this.isFlashSupported = false,
     this.canSwitchCamera = false,
+    this.onRefresh,
     this.errorMessage,
   });
 
@@ -22,6 +23,7 @@ class CameraViewfinder extends StatelessWidget {
   final VoidCallback onCapture;
   final VoidCallback onSwitchCamera;
   final VoidCallback onToggleFlash;
+  final VoidCallback? onRefresh;
   final FlashMode currentFlashMode;
   final bool isFlashSupported;
   final bool canSwitchCamera;
@@ -29,40 +31,53 @@ class CameraViewfinder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        color: Colors.black,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (isInitialized && controller != null)
-              FullBleedCameraPreview(controller: controller!)
-            else
-              CameraPlaceholderView(message: errorMessage),
-            if (isFlashSupported)
-              Positioned(
-                top: 16,
-                right: 16,
-                child: FlashModeButton(
-                  flashMode: currentFlashMode,
-                  onPressed: isInitialized ? onToggleFlash : null,
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (isInitialized && controller != null)
+            FullBleedCameraPreview(controller: controller!)
+          else
+            CameraPlaceholderView(message: errorMessage),
+          if (onRefresh != null)
+            Positioned(
+              top: 16,
+              left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black45,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.refresh, color: Colors.white, size: 20),
+                  onPressed: onRefresh,
+                  tooltip: 'Reinitialize Camera',
                 ),
               ),
+            ),
+          if (isFlashSupported)
             Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: CameraControlsBar(
-                isCapturing: isCapturing,
-                isEnabled: isInitialized,
-                canSwitchCamera: canSwitchCamera,
-                onCapture: onCapture,
-                onSwitchCamera: onSwitchCamera,
+              top: 16,
+              right: 16,
+              child: FlashModeButton(
+                flashMode: currentFlashMode,
+                onPressed: isInitialized ? onToggleFlash : null,
               ),
             ),
-          ],
-        ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: CameraControlsBar(
+              isCapturing: isCapturing,
+              isEnabled: isInitialized,
+              canSwitchCamera: canSwitchCamera,
+              onCapture: onCapture,
+              onSwitchCamera: onSwitchCamera,
+            ),
+          ),
+        ],
       ),
     );
   }

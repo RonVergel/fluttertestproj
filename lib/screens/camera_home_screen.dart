@@ -266,40 +266,26 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Snap & Gallery Note',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Reinitialize Camera',
-            onPressed: _initializeCamera,
-          ),
-        ],
-      ),
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: CameraViewfinder(
-                  controller: _cameraController,
-                  isInitialized: _isInitialized,
-                  isCapturing: _isCapturing,
-                  isFlashSupported: _isFlashSupported,
-                  canSwitchCamera: _availableCameras.length > 1,
-                  onCapture: _capturePhoto,
-                  onSwitchCamera: _switchCamera,
-                  onToggleFlash: _toggleFlash,
-                  currentFlashMode: _flashMode,
-                  errorMessage: _errorMessage,
-                ),
+              child: CameraViewfinder(
+                controller: _cameraController,
+                isInitialized: _isInitialized,
+                isCapturing: _isCapturing,
+                isFlashSupported: _isFlashSupported,
+                canSwitchCamera: _availableCameras.length > 1,
+                onCapture: _capturePhoto,
+                onSwitchCamera: _switchCamera,
+                onToggleFlash: _toggleFlash,
+                onRefresh: _initializeCamera,
+                currentFlashMode: _flashMode,
+                errorMessage: _errorMessage,
               ),
             ),
-            const Divider(height: 1),
+            const Divider(height: 1, color: Colors.white12),
             GalleryStrip(
               notes: widget.repository.notes,
               onSelectNote: _showNoteDetails,

@@ -12,9 +12,11 @@ class CameraHomeScreen extends StatefulWidget {
   const CameraHomeScreen({
     super.key,
     required this.repository,
+    this.studentId = '',
   });
 
   final SnapRepository repository;
+  final String studentId;
 
   @override
   State<CameraHomeScreen> createState() => _CameraHomeScreenState();
@@ -36,6 +38,7 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
   @override
   void initState() {
     super.initState();
+    _activeStudentId = widget.studentId;
     WidgetsBinding.instance.addObserver(this);
     _initializeCamera();
   }
@@ -234,6 +237,10 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
           behavior: SnackBarBehavior.floating,
         ),
       );
+
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       if (!mounted) return;
       if (e is CameraException &&
@@ -328,6 +335,9 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
                 isFlashSupported: _isFlashSupported,
                 canSwitchCamera: _availableCameras.length > 1,
                 activeStudentId: _activeStudentId,
+                onBack: Navigator.of(context).canPop()
+                    ? () => Navigator.of(context).pop()
+                    : null,
                 onTapStudentId: () async {
                   final newId = await _promptStudentId(_activeStudentId);
                   if (newId != null && mounted) {

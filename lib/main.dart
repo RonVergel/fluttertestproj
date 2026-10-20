@@ -2,7 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'screens/camera_home_screen.dart';
+import 'screens/student_id_entry_screen.dart';
 import 'services/snap_repository.dart';
 
 Future<void> main() async {
@@ -49,7 +49,7 @@ class SnapApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: CameraHomeScreen(repository: repository),
+      home: StudentIdEntryScreen(repository: repository),
     );
   }
 }

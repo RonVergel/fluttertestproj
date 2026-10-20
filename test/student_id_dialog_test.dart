@@ -14,13 +14,13 @@ void main() {
         ),
       );
 
-      expect(find.text('Enter Student ID'), findsOneWidget);
+      expect(find.text('Enter ID number'), findsWidgets);
       expect(find.text('PROCEED TO CAMERA'), findsOneWidget);
       expect(find.text('Cancel'), findsOneWidget);
 
       final textField = tester.widget<TextField>(find.byType(TextField));
       expect(textField.autofocus, isTrue);
-      expect(textField.decoration?.labelText, equals('Student ID Number'));
+      expect(textField.decoration?.labelText, equals('Enter ID number'));
     });
 
     testWidgets('returns entered student ID on submission',
@@ -50,12 +50,12 @@ void main() {
 
       await tester.enterText(
         find.byType(TextField),
-        '2024-55443',
+        '654321',
       );
       await tester.tap(find.text('PROCEED TO CAMERA'));
       await tester.pumpAndSettle();
 
-      expect(result, equals('2024-55443'));
+      expect(result, equals('654321'));
     });
   });
 }

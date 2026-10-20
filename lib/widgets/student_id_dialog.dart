@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StudentIdInputDialog extends StatefulWidget {
   const StudentIdInputDialog({
@@ -32,7 +33,7 @@ class _StudentIdInputDialogState extends State<StudentIdInputDialog> {
 
   void _submit() {
     final text = _controller.text.trim();
-    if (text.isNotEmpty) {
+    if (text.length == 6) {
       Navigator.of(context).pop(text);
     }
   }
@@ -71,7 +72,7 @@ class _StudentIdInputDialogState extends State<StudentIdInputDialog> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Enter Student ID',
+              'Enter ID number',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -80,28 +81,38 @@ class _StudentIdInputDialogState extends State<StudentIdInputDialog> {
             ),
             const SizedBox(height: 4),
             const Text(
-              'Please enter the student ID number before capturing the photo.',
+              'Please enter the 6-digit student ID number.',
               style: TextStyle(color: Colors.white70, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _controller,
               autofocus: true,
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(6),
+              ],
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 4,
               ),
               onSubmitted: (_) => _submit(),
               decoration: InputDecoration(
-                labelText: 'Student ID Number',
+                labelText: 'Enter ID number',
                 labelStyle: const TextStyle(
                   color: StudentIdInputDialog.umYellow,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: 0,
                 ),
-                hintText: 'Type ID number (e.g. 2024-12345)',
-                hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
+                hintText: '000000',
+                hintStyle: const TextStyle(
+                  color: Colors.white38,
+                  fontSize: 18,
+                  letterSpacing: 4,
+                ),
                 prefixIcon: const Icon(
                   Icons.badge_outlined,
                   color: StudentIdInputDialog.umYellow,
@@ -170,3 +181,4 @@ class _StudentIdInputDialogState extends State<StudentIdInputDialog> {
     );
   }
 }
+

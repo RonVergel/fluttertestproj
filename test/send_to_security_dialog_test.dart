@@ -25,7 +25,7 @@ void main() {
       expect(find.text('Retake'), findsOneWidget);
       final textField = tester.widget<TextField>(find.byType(TextField));
       expect(textField.autofocus, isTrue);
-      expect(textField.decoration?.labelText, equals('Student ID Number'));
+      expect(textField.decoration?.labelText, equals('Enter ID number'));
     });
 
     testWidgets('returns student ID when SEND TO SECURITY OFFICE is tapped',
@@ -58,12 +58,12 @@ void main() {
 
       await tester.enterText(
         find.byType(TextField),
-        '2024-00123',
+        '123456',
       );
       await tester.tap(find.text('SEND TO SECURITY OFFICE'));
       await tester.pumpAndSettle();
 
-      expect(result, equals('2024-00123'));
+      expect(result, equals('123456'));
     });
   });
 }

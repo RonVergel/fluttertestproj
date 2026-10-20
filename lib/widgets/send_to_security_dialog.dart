@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'snap_image_view.dart';
 
 class SendToSecurityDialog extends StatefulWidget {
@@ -95,20 +95,30 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
             TextField(
               controller: _idController,
               autofocus: widget.studentId.isEmpty,
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(6),
+              ],
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
               ),
               decoration: InputDecoration(
-                labelText: 'Student ID Number',
+                labelText: 'Enter ID number',
                 labelStyle: const TextStyle(
                   color: SendToSecurityDialog.umYellow,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: 0,
                 ),
-                hintText: 'Type ID number (e.g. 2024-12345)',
-                hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
+                hintText: 'Enter ID number (6 digits)',
+                hintStyle: const TextStyle(
+                  color: Colors.white38,
+                  fontSize: 13,
+                  letterSpacing: 0,
+                ),
                 prefixIcon: const Icon(
                   Icons.badge_outlined,
                   color: SendToSecurityDialog.umYellow,

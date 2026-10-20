@@ -14,6 +14,7 @@ class CameraViewfinder extends StatelessWidget {
     this.isFlashSupported = false,
     this.canSwitchCamera = false,
     this.onRefresh,
+    this.onBack,
     this.activeStudentId = '',
     this.onTapStudentId,
     this.errorMessage,
@@ -26,6 +27,7 @@ class CameraViewfinder extends StatelessWidget {
   final VoidCallback onSwitchCamera;
   final VoidCallback onToggleFlash;
   final VoidCallback? onRefresh;
+  final VoidCallback? onBack;
   final String activeStudentId;
   final VoidCallback? onTapStudentId;
   final FlashMode currentFlashMode;
@@ -44,10 +46,26 @@ class CameraViewfinder extends StatelessWidget {
             FullBleedCameraPreview(controller: controller!)
           else
             CameraPlaceholderView(message: errorMessage),
-          if (onRefresh != null)
+          if (onBack != null)
             Positioned(
               top: 16,
               left: 16,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.black45,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                  onPressed: onBack,
+                  tooltip: 'Back to ID Form',
+                ),
+              ),
+            ),
+          if (onRefresh != null)
+            Positioned(
+              top: 16,
+              left: onBack != null ? 68 : 16,
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.black45,
@@ -62,7 +80,11 @@ class CameraViewfinder extends StatelessWidget {
             ),
           Positioned(
             top: 16,
-            left: onRefresh != null ? 68 : 16,
+            left: (onBack != null && onRefresh != null)
+                ? 120
+                : (onBack != null || onRefresh != null)
+                    ? 68
+                    : 16,
             right: isFlashSupported ? 68 : 16,
             child: ActiveStudentIdBadge(
               studentId: activeStudentId,

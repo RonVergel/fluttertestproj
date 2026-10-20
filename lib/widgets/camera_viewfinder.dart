@@ -263,7 +263,7 @@ class ShutterButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: isEnabled ? Colors.white : Colors.white38,
+            color: isEnabled ? const Color(0xFFECB843) : Colors.white38,
             width: 4,
           ),
         ),
@@ -271,7 +271,7 @@ class ShutterButton extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: isCapturing
-                ? Colors.redAccent
+                ? const Color(0xFF902E2B)
                 : (isEnabled ? Colors.white : Colors.white24),
           ),
           child: isCapturing

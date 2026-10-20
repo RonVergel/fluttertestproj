@@ -193,7 +193,17 @@ class _CameraHomeScreenState extends State<CameraHomeScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Report sent to Security Office!'),
+          content: Row(
+            children: [
+              Icon(Icons.check_circle_rounded, color: Color(0xFFECB843), size: 20),
+              SizedBox(width: 10),
+              Text(
+                'Report sent to UM Security Office!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          backgroundColor: Color(0xFF902E2B),
           duration: Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
         ),

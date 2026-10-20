@@ -7,7 +7,8 @@ void main() {
   group('SendToSecurityDialog', () {
     final sampleBytes = Uint8List.fromList([1, 2, 3]);
 
-    testWidgets('renders preview and SEND TO SECURITY OFFICE button',
+    testWidgets(
+        'renders preview, autofocus Student ID field and SEND TO SECURITY OFFICE button',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -22,10 +23,12 @@ void main() {
 
       expect(find.text('SEND TO SECURITY OFFICE'), findsOneWidget);
       expect(find.text('Retake'), findsOneWidget);
-      expect(find.byType(TextField), findsOneWidget);
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(textField.autofocus, isTrue);
+      expect(textField.decoration?.labelText, equals('Student ID Number'));
     });
 
-    testWidgets('returns remarks when SEND TO SECURITY OFFICE is tapped',
+    testWidgets('returns student ID when SEND TO SECURITY OFFICE is tapped',
         (WidgetTester tester) async {
       String? result;
 
@@ -55,12 +58,12 @@ void main() {
 
       await tester.enterText(
         find.byType(TextField),
-        'Inappropriate attire - no ID',
+        '2024-00123',
       );
       await tester.tap(find.text('SEND TO SECURITY OFFICE'));
       await tester.pumpAndSettle();
 
-      expect(result, equals('Inappropriate attire - no ID'));
+      expect(result, equals('2024-00123'));
     });
   });
 }

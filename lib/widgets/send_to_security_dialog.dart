@@ -12,29 +12,35 @@ class SendToSecurityDialog extends StatefulWidget {
   final Uint8List? imageBytes;
   final String filePath;
 
+  static const Color umRed = Color(0xFF902E2B);
+  static const Color umYellow = Color(0xFFECB843);
+
   @override
   State<SendToSecurityDialog> createState() => _SendToSecurityDialogState();
 }
 
 class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
-  late final TextEditingController _remarksController;
+  late final TextEditingController _idController;
 
   @override
   void initState() {
     super.initState();
-    _remarksController = TextEditingController();
+    _idController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _remarksController.dispose();
+    _idController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: const BorderSide(color: SendToSecurityDialog.umRed, width: 2),
+      ),
       backgroundColor: const Color(0xFF1E1E1E),
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -44,10 +50,14 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
           children: [
             const Row(
               children: [
-                Icon(Icons.shield_outlined, color: Colors.amberAccent, size: 24),
+                Icon(
+                  Icons.shield_rounded,
+                  color: SendToSecurityDialog.umYellow,
+                  size: 26,
+                ),
                 SizedBox(width: 8),
                 Text(
-                  'Dress Code Review',
+                  'UM Security Office',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -56,12 +66,21 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
                 ),
               ],
             ),
+            const SizedBox(height: 4),
+            const Text(
+              'Dress Code Violation Review',
+              style: TextStyle(
+                color: SendToSecurityDialog.umYellow,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const SizedBox(height: 16),
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.sizeOf(context).height * 0.4,
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.38,
                 ),
                 child: SnapImageView(
                   filePath: widget.filePath,
@@ -72,23 +91,40 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: _remarksController,
+              controller: _idController,
+              autofocus: true,
+              keyboardType: TextInputType.text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
               decoration: InputDecoration(
-                hintText: 'Violation remarks (e.g. Inappropriate attire, no ID)...',
+                labelText: 'Student ID Number',
+                labelStyle: const TextStyle(
+                  color: SendToSecurityDialog.umYellow,
+                  fontWeight: FontWeight.w500,
+                ),
+                hintText: 'Type ID number (e.g. 2024-12345)',
                 hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
+                prefixIcon: const Icon(
+                  Icons.badge_outlined,
+                  color: SendToSecurityDialog.umYellow,
+                ),
                 filled: true,
                 fillColor: Colors.black26,
-                border: OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: const BorderSide(color: Colors.white24),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.deepPurpleAccent),
+                  borderSide: const BorderSide(
+                    color: SendToSecurityDialog.umYellow,
+                    width: 2,
+                  ),
                 ),
               ),
-              maxLines: 2,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             const SizedBox(height: 20),
             Row(
@@ -112,21 +148,26 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
                   flex: 2,
                   child: FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent,
+                      backgroundColor: SendToSecurityDialog.umRed,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop(_remarksController.text.trim());
+                      final text = _idController.text.trim();
+                      Navigator.of(context).pop(
+                        text.isNotEmpty ? text : 'Unspecified ID',
+                      );
                     },
                     icon: const Icon(Icons.send_rounded, size: 18),
                     label: const Text(
                       'SEND TO SECURITY OFFICE',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 11,
+                        letterSpacing: 0.3,
                       ),
                     ),
                   ),

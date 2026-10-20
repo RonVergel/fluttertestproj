@@ -49,10 +49,29 @@ class NoteDetailDialog extends StatelessWidget {
                   ),
             ),
             if (note.caption.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                note.caption,
-                style: Theme.of(context).textTheme.bodyMedium,
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF902E2B).withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFECB843)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.badge_outlined, color: Color(0xFFECB843), size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Student ID: ${note.caption}',
+                      style: const TextStyle(
+                        color: Color(0xFFECB843),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
             const SizedBox(height: 16),

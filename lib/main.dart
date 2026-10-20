@@ -37,14 +37,15 @@ class SnapApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF902E2B),
+          secondary: Color(0xFFECB843),
+          surface: Color(0xFF1E1E1E),
         ),
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFF121212),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1E1E1E),
+          backgroundColor: Color(0xFF902E2B),
           elevation: 0,
         ),
       ),

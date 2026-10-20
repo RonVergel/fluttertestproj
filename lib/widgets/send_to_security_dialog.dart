@@ -68,7 +68,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
             ),
             const SizedBox(height: 4),
             const Text(
-              'Dress Code Violation Review',
+              'Violation Review',
               style: TextStyle(
                 color: SendToSecurityDialog.umYellow,
                 fontSize: 12,
@@ -105,7 +105,7 @@ class _SendToSecurityDialogState extends State<SendToSecurityDialog> {
                   color: SendToSecurityDialog.umYellow,
                   fontWeight: FontWeight.w500,
                 ),
-                hintText: 'Type ID number (e.g. 2024-12345)',
+                hintText: 'Type ID number',
                 hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
                 prefixIcon: const Icon(
                   Icons.badge_outlined,

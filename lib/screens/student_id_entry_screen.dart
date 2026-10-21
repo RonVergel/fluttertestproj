@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/snap_note.dart';
 import '../services/snap_repository.dart';
 import '../widgets/gallery_strip.dart';
@@ -103,26 +104,27 @@ class _StudentIdEntryScreenState extends State<StudentIdEntryScreen> {
     final isComplete = _idController.text.length == 6;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: StudentIdEntryScreen.umRed,
       appBar: AppBar(
         backgroundColor: StudentIdEntryScreen.umRed,
-        elevation: 2,
+        elevation: 0,
         centerTitle: true,
-        title: const Row(
+        title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.shield_rounded,
               color: StudentIdEntryScreen.umYellow,
-              size: 22,
+              size: 24,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
               'UM Security Office',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w700,
                 fontSize: 18,
                 letterSpacing: 0.5,
+                color: Colors.white,
               ),
             ),
           ],
@@ -132,22 +134,21 @@ class _StudentIdEntryScreenState extends State<StudentIdEntryScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Center(
                         child: Container(
-                          width: 84,
-                          height: 84,
+                          width: 80,
+                          height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: StudentIdEntryScreen.umRed.withValues(alpha: 0.2),
+                            color: Colors.black.withValues(alpha: 0.18),
                             border: Border.all(
                               color: StudentIdEntryScreen.umYellow,
                               width: 2.5,
@@ -156,195 +157,172 @@ class _StudentIdEntryScreenState extends State<StudentIdEntryScreen> {
                           child: const Icon(
                             Icons.badge_rounded,
                             color: StudentIdEntryScreen.umYellow,
-                            size: 46,
+                            size: 44,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const Text(
+                      const SizedBox(height: 24),
+                      Text(
                         'Dress Code Inspection',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
                           color: Colors.white,
-                          letterSpacing: 0.3,
+                          letterSpacing: -0.5,
                         ),
                       ),
                       const SizedBox(height: 6),
-                      const Text(
-                        'Security Office Violation Logger',
+                      Text(
+                        'CAMPUS SECURITY CHECKPOINT',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
                           color: StudentIdEntryScreen.umYellow,
-                          letterSpacing: 0.5,
+                          letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 28),
-                      Container(
-                        padding: const EdgeInsets.all(22),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E1E1E),
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
+                      const SizedBox(height: 36),
+                      Text(
+                        'Enter ID number',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '6-digit student ID number',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      TextField(
+                        controller: _idController,
+                        focusNode: _focusNode,
+                        autofocus: true,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 8,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(6),
+                        ],
+                        onSubmitted: (_) => _proceedToCamera(),
+                        decoration: InputDecoration(
+                          labelText: 'Enter ID number',
+                          labelStyle: GoogleFonts.montserrat(
+                            color: StudentIdEntryScreen.umYellow,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0,
+                          ),
+                          hintText: '000000',
+                          hintStyle: GoogleFonts.montserrat(
+                            color: Colors.white38,
+                            fontSize: 28,
+                            letterSpacing: 8,
+                          ),
+                          counterText: '${_idController.text.length}/6 digits',
+                          counterStyle: GoogleFonts.montserrat(
                             color: isComplete
                                 ? StudentIdEntryScreen.umYellow
-                                : StudentIdEntryScreen.umRed.withValues(alpha: 0.6),
-                            width: 1.8,
+                                : Colors.white70,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
                           ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 16,
-                              offset: Offset(0, 6),
+                          errorText: _errorMessage,
+                          errorStyle: GoogleFonts.montserrat(
+                            color: StudentIdEntryScreen.umYellow,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.pin_rounded,
+                            color: StudentIdEntryScreen.umYellow,
+                          ),
+                          suffixIcon: hasInput
+                              ? IconButton(
+                                  icon: const Icon(
+                                    Icons.clear_rounded,
+                                    color: Colors.white70,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    _idController.clear();
+                                    _focusNode.requestFocus();
+                                  },
+                                )
+                              : null,
+                          filled: true,
+                          fillColor: Colors.black.withValues(alpha: 0.22),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.35),
+                              width: 1.5,
                             ),
-                          ],
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: StudentIdEntryScreen.umYellow,
+                              width: 2.5,
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: StudentIdEntryScreen.umYellow,
+                              width: 2,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: StudentIdEntryScreen.umYellow,
+                              width: 2.5,
+                            ),
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            const Text(
-                              'Enter ID number',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            const Text(
-                              'Please input the 6-digit student ID before taking a picture.',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white60,
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            TextField(
-                              controller: _idController,
-                              focusNode: _focusNode,
-                              autofocus: true,
-                              keyboardType: TextInputType.number,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 6,
-                              ),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(6),
-                              ],
-                              onSubmitted: (_) => _proceedToCamera(),
-                              decoration: InputDecoration(
-                                labelText: 'Enter ID number',
-                                labelStyle: const TextStyle(
-                                  color: StudentIdEntryScreen.umYellow,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 0,
-                                ),
-                                hintText: '000000',
-                                hintStyle: const TextStyle(
-                                  color: Colors.white24,
-                                  fontSize: 24,
-                                  letterSpacing: 6,
-                                ),
-                                counterText: '${_idController.text.length}/6 digits',
-                                counterStyle: TextStyle(
-                                  color: isComplete
-                                      ? StudentIdEntryScreen.umYellow
-                                      : Colors.white38,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                errorText: _errorMessage,
-                                prefixIcon: const Icon(
-                                  Icons.pin_rounded,
-                                  color: StudentIdEntryScreen.umYellow,
-                                ),
-                                suffixIcon: hasInput
-                                    ? IconButton(
-                                        icon: const Icon(
-                                          Icons.clear_rounded,
-                                          color: Colors.white60,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          _idController.clear();
-                                          _focusNode.requestFocus();
-                                        },
-                                      )
-                                    : null,
-                                filled: true,
-                                fillColor: Colors.black26,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: Colors.white24,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: StudentIdEntryScreen.umYellow,
-                                    width: 2,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).colorScheme.error,
-                                    width: 1.5,
-                                  ),
-                                ),
-                                focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).colorScheme.error,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 22),
-                            FilledButton.icon(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: StudentIdEntryScreen.umRed,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  side: isComplete
-                                      ? const BorderSide(
-                                          color: StudentIdEntryScreen.umYellow,
-                                          width: 1.5,
-                                        )
-                                      : BorderSide.none,
-                                ),
-                              ),
-                              onPressed: _proceedToCamera,
-                              icon: const Icon(
-                                Icons.camera_alt_rounded,
-                                color: StudentIdEntryScreen.umYellow,
-                                size: 22,
-                              ),
-                              label: const Text(
-                                'PROCEED TO CAMERA',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                          ],
+                      ),
+                      const SizedBox(height: 24),
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: StudentIdEntryScreen.umYellow,
+                          foregroundColor: const Color(0xFF1E1E1E),
+                          padding: const EdgeInsets.symmetric(vertical: 18),
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        onPressed: _proceedToCamera,
+                        icon: const Icon(
+                          Icons.camera_alt_rounded,
+                          color: Color(0xFF1E1E1E),
+                          size: 22,
+                        ),
+                        label: Text(
+                          'PROCEED TO CAMERA',
+                          style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
+                            letterSpacing: 0.6,
+                            color: const Color(0xFF1E1E1E),
+                          ),
                         ),
                       ),
                       if (widget.repository.notes.isNotEmpty) ...[
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 36),
                         Row(
                           children: [
                             const Icon(
@@ -355,9 +333,9 @@ class _StudentIdEntryScreenState extends State<StudentIdEntryScreen> {
                             const SizedBox(width: 8),
                             Text(
                               'Recent Shift Reports (${widget.repository.notes.length})',
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 13,
                               ),
                             ),
